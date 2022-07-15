@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React from 'react'
 import format from 'date-fns';
+import SelectSearch from 'react-select-search';
 
 
 export default function testing({ txndatas }) {
@@ -8,15 +9,62 @@ export default function testing({ txndatas }) {
     return (
         <div>
             <h1> testing </h1>
-            <table>
+            <div className='container mx-auto flex flex-row'>
+
+                <SelectSearch
+                    options={[]}
+                    search
+                    placeholder="Search for Bank"
+                    className="border-2 border-slate-500 mr-2"
+                />
+                <SelectSearch
+                    options={[]}
+                    search
+                    placeholder="Search for account no"
+                    className="border-2 border-slate-500 mr-2"
+                />
+                <SelectSearch
+                    options={[]}
+                    search
+                    placeholder="Search for date"
+                    className="border-2 border-slate-500 mr-2"
+                />
+                <SelectSearch
+                    options={[]}
+                    search
+                    placeholder="Search for txn no"
+                    className="border-2 border-slate-500 mr-2"
+
+                />
+                <SelectSearch
+                    options={[]}
+                    search
+                    placeholder="Search for description"
+                    className="border-2 border-slate-500 mr-2"
+
+                />
+                <SelectSearch
+                    options={[]}
+                    search
+                    placeholder="Search for amount"
+                    className="border-2 border-slate-500 mr-2"
+
+                />
+
+
+
+            </div>
+            <table className='table-auto border-separate border-spacing-2 border-spacing-y-2 mb-10'>
                 <thead>
-                    <tr>
-                        <th>mode</th>
-                        <th>nameofInstitution</th>
-                        <th>transactionDate</th>
-                        <th>amount</th>
+                    <tr className='text-left '>
+                        <th></th>
+                        <th></th>
+                        <th>name of Institution</th>
+                        <th>account No</th>
+                        <th>transaction Date</th>
+                        <th>transaction No</th>
                         <th>Description</th>
-                        <th>accountNo</th>
+                        <th>amount</th>
                         <th>Document</th>
                     </tr>
                 </thead>
@@ -25,9 +73,12 @@ export default function testing({ txndatas }) {
                         txndatas.map((item, index) => {
                             return (
                                 <tr key={item.matterId}>
+                                    <td></td>
+                                    <td></td>
                                     <td>{item.nameofInstitution}</td>
                                     <td>{item.accountNo}</td>
                                     <td>{item.transactionDate}</td>
+                                    <td>{item.transactionNumber}</td>
                                     {/* <td>{format(item.transactionDate)}</td> */}
                                     <td>{item.amount}</td>
                                     <td>{item.description}</td>
