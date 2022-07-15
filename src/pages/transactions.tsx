@@ -5,6 +5,7 @@ import SelectSearch from 'react-select-search';
 
 
 export default function testing({ txndatas }) {
+   
     // console.log('posts', txndatas)
     return (
         <div>
@@ -82,10 +83,9 @@ export default function testing({ txndatas }) {
                                     <td>{item.accountNo}</td>
                                     <td>{item.transactionDate}</td>
                                     <td>{item.transactionNumber}</td>
-                                    {/* <td>{format(item.transactionDate)}</td> */}
-                                    <td>{item.amount}</td>
                                     <td>{item.description}</td>
                                     <td>{item.accountNo}</td>
+                                    <td>{item.amount}</td>
                                     {/* <td>{item.url}</td> */}
                                 </tr>
                             );
@@ -102,7 +102,7 @@ export default function testing({ txndatas }) {
 export async function getServerSideProps(context) {
     // const { params, req, res } = context
     // const { transactions } = params
-    const response = await fetch('http://localhost:3000/api/alltransactions');
+    const response = await fetch('http://localhost:3000/api/alltransactions?transactions=${inputText}');
     const data = await response.json();
 
     // console.log('response', data)

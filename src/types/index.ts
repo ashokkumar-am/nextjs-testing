@@ -15,3 +15,21 @@ export interface Transaction {
     justificationStatus: string;
 }
 
+enum JustificationStatus {
+    OperationJustified,
+    PendingForReview,
+    Justified,
+    Unjustified,
+    NotApplicable,
+    SentForClarification
+}
+
+enum TranscationType {
+    Withdrawal,
+    Deposit,
+    Check,
+    Cash,
+    ATM,
+    Online
+}
+
