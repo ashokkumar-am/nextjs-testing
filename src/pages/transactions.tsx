@@ -10,6 +10,9 @@ export default function testing({ txndatas }) {
         <div>
             <h1> testing </h1>
             <div className='container mx-auto flex flex-row'>
+                <div>
+                    <input type="checkbox" className="checked:bg-blue-500 p-2 m-2" />
+                </div>
 
                 <SelectSearch
                     options={[]}
@@ -73,8 +76,8 @@ export default function testing({ txndatas }) {
                         txndatas.map((item, index) => {
                             return (
                                 <tr key={item.matterId}>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input className='star px-8' type="checkbox" /></td>
+                                    <td> <input type="checkbox" className="checked:bg-blue-500 p-2 m-2" /></td>
                                     <td>{item.nameofInstitution}</td>
                                     <td>{item.accountNo}</td>
                                     <td>{item.transactionDate}</td>
