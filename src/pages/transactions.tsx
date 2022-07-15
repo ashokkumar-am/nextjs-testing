@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import React from 'react'
-
+import format from 'date-fns';
 
 
 export default function testing({ txndatas }) {
@@ -28,6 +28,7 @@ export default function testing({ txndatas }) {
                                     <td>{item.nameofInstitution}</td>
                                     <td>{item.accountNo}</td>
                                     <td>{item.transactionDate}</td>
+                                    {/* <td>{format(item.transactionDate)}</td> */}
                                     <td>{item.amount}</td>
                                     <td>{item.description}</td>
                                     <td>{item.accountNo}</td>
