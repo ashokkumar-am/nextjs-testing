@@ -1,11 +1,16 @@
 /* eslint-disable react/jsx-key */
-import React from 'react'
+import React, { useState } from 'react'
 import format from 'date-fns';
 import SelectSearch from 'react-select-search';
+import Select from 'react-select';
 
 
 export default function testing({ txndatas }) {
-   
+    const [selectedValue, setSelectedValue] = useState([]);
+
+    const handleChange = (e) => {
+        setSelectedValue(Array.isArray(e) ? e.map((x) => x.value) : []);
+    }
     // console.log('posts', txndatas)
     return (
         <div>
@@ -14,7 +19,15 @@ export default function testing({ txndatas }) {
                 <div>
                     <input type="checkbox" className="checked:bg-blue-500 p-2 m-2" />
                 </div>
-
+                <Select
+                    className="dropdown "
+                    placeholder="select ur choice"
+                    // value={txndatas.filter((obj) => { selectedValue.include(obj.value) })}
+                    options={txndatas}
+                    onChange={handleChange}
+                    isMulti
+                    isClearable
+                />
                 <SelectSearch
                     options={[]}
                     search
