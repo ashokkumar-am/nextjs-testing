@@ -9,6 +9,7 @@ export default function testing({ txndatas }) {
     const [selectedValue, setSelectedValue] = useState([]);
 
     const handleChange = (e) => {
+        console.log(e)
         setSelectedValue(Array.isArray(e) ? e.map((x) => x.value) : []);
     }
     // console.log('posts', txndatas)
@@ -22,7 +23,7 @@ export default function testing({ txndatas }) {
                 <Select
                     className="dropdown "
                     placeholder="select ur choice"
-                    // value={txndatas.filter((obj) => { selectedValue.include(obj.value) })}
+                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
                     options={txndatas}
                     onChange={handleChange}
                     isMulti
@@ -123,6 +124,8 @@ export async function getServerSideProps(context) {
         a = [...a, ...o.transactions];
         return a;
     }, []);
+    // data1 = txndatas.filter((obj, i) => { txndatas.include(obj.transactions.matterId) });
+    // console.log(data1);
     return {
         props: {
             txndatas
