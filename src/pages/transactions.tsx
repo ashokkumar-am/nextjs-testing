@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import format from 'date-fns';
 import SelectSearch from 'react-select-search';
 import Select from 'react-select';
+import axios from 'axios';
 
 
 export default function testing({ txndatas }) {
@@ -22,51 +23,58 @@ export default function testing({ txndatas }) {
                 </div>
                 <Select
                     className="dropdown "
-                    placeholder="select ur choice"
+                    placeholder="select 4 bank"
                     // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
                     options={txndatas}
                     onChange={handleChange}
                     isMulti
                     isClearable
                 />
-                <SelectSearch
-                    options={[]}
-                    search
-                    placeholder="Search for Bank"
-                    className="border-2 border-slate-500 mr-2"
+                <Select
+                    className="dropdown "
+                    placeholder="Search 4 acct no"
+                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
+                    // options={txndatas}
+                    onChange={handleChange}
+                    isMulti
+                    isClearable
                 />
-                <SelectSearch
-                    options={[]}
-                    search
-                    placeholder="Search for account no"
-                    className="border-2 border-slate-500 mr-2"
-                />
+
+
                 <SelectSearch
                     options={[]}
                     search
                     placeholder="Search for date"
                     className="border-2 border-slate-500 mr-2"
                 />
-                <SelectSearch
-                    options={[]}
-                    search
+
+                <Select
+                    className="dropdown "
                     placeholder="Search for txn no"
-                    className="border-2 border-slate-500 mr-2"
-
+                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
+                    options={txndatas}
+                    onChange={handleChange}
+                    isMulti
+                    isClearable
                 />
-                <SelectSearch
-                    options={[]}
-                    search
+
+                <Select
+                    className="dropdown "
                     placeholder="Search for description"
-                    className="border-2 border-slate-500 mr-2"
-
+                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
+                    options={txndatas}
+                    onChange={handleChange}
+                    isMulti
+                    isClearable
                 />
-                <SelectSearch
-                    options={[]}
-                    search
+                <Select
+                    className="dropdown "
                     placeholder="Search for amount"
-                    className="border-2 border-slate-500 mr-2"
-
+                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
+                    options={txndatas}
+                    onChange={handleChange}
+                    isMulti
+                    isClearable
                 />
 
 
@@ -116,14 +124,15 @@ export default function testing({ txndatas }) {
 export async function getServerSideProps(context) {
     // const { params, req, res } = context
     // const { transactions } = params
-    const response = await fetch('http://localhost:3000/api/alltransactions?transactions=${inputText}');
-    const data = await response.json();
+    const response = await axios.get('http://localhost:3000/api/alltransactions?transactions=${inputText}');
+    const data = await response.data;
 
     // console.log('response', data)
     let txndatas = data.reduce((a, o) => {
         a = [...a, ...o.transactions];
         return a;
     }, []);
+
     // data1 = txndatas.filter((obj, i) => { txndatas.include(obj.transactions.matterId) });
     // console.log(data1);
     return {
