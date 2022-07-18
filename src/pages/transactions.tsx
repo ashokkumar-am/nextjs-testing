@@ -5,6 +5,7 @@ import moment from 'moment';
 import SelectSearch from 'react-select-search';
 import Select from 'react-select';
 import axios from 'axios';
+import _ from 'lodash';
 
 
 export default function testing(this: any, { txndatas, data1 }) {
@@ -55,7 +56,6 @@ export default function testing(this: any, { txndatas, data1 }) {
                     isClearable
                 />
 
-
                 <SelectSearch
                     options={[]}
                     search
@@ -85,8 +85,10 @@ export default function testing(this: any, { txndatas, data1 }) {
                 <Select
                     className="dropdown "
                     placeholder="Search for amount"
+                    // value={_.uniq(_.uniqBy(txndatas, obj => obj.amount))}
+                    // value={txndatas.map((item, index) => <li key={item.id}>{item.amount}</li>)}
                     // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
-                    options={txndatas}
+                    options={_.uniq(_.uniqBy(txndatas, obj => obj.amount))}
                     onChange={handleChange}
                     isMulti
                     isClearable
@@ -155,10 +157,13 @@ export async function getServerSideProps(context) {
             notFound: true,
         }
     }
+
+    let uniqueamount = _.uniqBy(txndatas, obj => obj.amount);
+    console.log(uniqueamount);
     // let txndatedatas = txndatas.filter(d => (moment(d.transactionDate).format("DD-MM-YYYY") === date)).map(item) => {
     //     return d;
     // }, []);
-    
+
     // let data1 = txndatas.filter((obj, i) => { txndatas.includes("description") });
     // console.log(data1);
     return {
