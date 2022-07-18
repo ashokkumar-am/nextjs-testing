@@ -9,22 +9,37 @@ import axios from 'axios';
 import _ from 'lodash';
 
 
-export default function testing(this: any, { txndatas, data1, uniqueAmount }) {
+export default function testing(this: any, { data,
+    uniqueAmount,
+    uniqueInst,
+    uniqueAcctNo,
+    uniqueTxnNo,
+    uniqueDescr }) {
     const [txnamount, setTxnAmount] = useState()
     const [selectedValue, setSelectedValue] = useState();
     // const [matterId, accountNo] = useState();
     let selectOptions: string[] = [];
 
-    const options = txndatas.map((d, index) => ({
+    const options = data.map((d, index) => ({
         "value": d.matterId,
         "label": d.accountNo
     }))
     const optionsAmount = uniqueAmount.map((d, index) => ({
-
         "value": d.amount,
         "label": d.amount.toString()
     }))
-
+    const optionsInst = uniqueInst.map(d => ({
+        "value": d.nameofInstitution,
+        "label": d.nameofInstitution.toString()
+    }))
+    const optionsAcctNo = uniqueAcctNo.map(d => ({
+        "value": d.accountNo,
+        "label": d.accountNo.toString()
+    }))
+    // const optionsDescr = uniqueDescr.map(d => ({
+    //     "value": d.description,
+    //     "label" : d.description.toString()
+    // }))
     // setTxnAmount(optionsAmount)
     const mode = {
         Deposit: "+",
@@ -50,7 +65,7 @@ export default function testing(this: any, { txndatas, data1, uniqueAmount }) {
                     className="dropdown "
                     placeholder="select 4 bank"
                     // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
-                    options={data1}
+                    options={optionsInst}
                     onChange={handleChange}
                     isMulti
                     isClearable
@@ -58,8 +73,8 @@ export default function testing(this: any, { txndatas, data1, uniqueAmount }) {
                 <Select
                     className="dropdown "
                     placeholder="Search 4 acct no"
-                    value={txndatas.filter((obj, i) => { txndatas.indexOf(obj.nameofInstitution) })}
-                    options={txndatas}
+                    value=""
+                    options={optionsAcctNo}
                     onChange={handleChange}
                     isMulti
                     isClearable
@@ -76,7 +91,7 @@ export default function testing(this: any, { txndatas, data1, uniqueAmount }) {
                     className="dropdown "
                     placeholder="Search for txn no"
                     // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
-                    options={txndatas}
+                    options={data}
                     onChange={handleChange}
                     isMulti
                     isClearable
@@ -85,8 +100,8 @@ export default function testing(this: any, { txndatas, data1, uniqueAmount }) {
                 <Select
                     className="dropdown "
                     placeholder="Search for description"
-                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
-                    options={data1}
+                    value=""
+                    options={data}
                     onChange={handleChange}
                     isMulti
                     isClearable
@@ -95,9 +110,6 @@ export default function testing(this: any, { txndatas, data1, uniqueAmount }) {
                     className="dropdown "
                     placeholder="Search for amount"
                     value=""
-                    // value={_.uniq(_.uniqBy(txndatas, obj => obj.amount))}
-                    // value={txndatas.map((item, index) => <li key={item.id}>{item.amount}</li>)}
-                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
                     options={optionsAmount}
                     onChange={handleChange}
                     isMulti
@@ -123,7 +135,7 @@ export default function testing(this: any, { txndatas, data1, uniqueAmount }) {
                 </thead>
                 <tbody>
                     {
-                        txndatas.map((item, index) => {
+                        data.map((item, index) => {
                             return (
                                 <tr key={item.matterId}>
                                     <td><input className='star px-8' type="checkbox" /></td>
@@ -154,22 +166,34 @@ export async function getServerSideProps() {
     // console.log(params);
     // const { alltransactions } = params
     const response = await axios.get('http://localhost:3000/api/alltransactions');
-    const data = await response.data;
+    const datas = await response.data;
 
     // console.log('response', data)
-    let txndatas = data.reduce((a, o) => {
+    let data = datas.reduce((a, o) => {
         a = [...a, ...o.transactions];
         return a;
     }, []);
 
-    if (!txndatas) {
+    if (!data) {
         return {
             notFound: true,
         }
     }
 
-    let uniqueAmount = _.uniqBy(txndatas, obj => obj.amount);
+    let uniqueAmount = _.uniqBy(data, obj => obj.amount);
     console.log(uniqueAmount);
+
+    let uniqueInst = _.uniqBy(data, obj => obj.nameofInstitution);
+    console.log(uniqueInst);
+
+    let uniqueAcctNo = _.uniqBy(data, obj => obj.accountNo);
+    console.log(uniqueAcctNo);
+
+    let uniqueTxnNo = _.uniqBy(data, obj => obj.transactionNumber);
+    console.log(uniqueTxnNo);
+
+    let uniqueDescr = _.uniqBy(data, obj => obj.description);
+    console.log(uniqueDescr);
 
 
     // let txndatedatas = txndatas.filter(d => (moment(d.transactionDate).format("DD-MM-YYYY") === date)).map(item) => {
@@ -180,11 +204,16 @@ export async function getServerSideProps() {
     // console.log(data1);
     return {
         props: {
-            txndatas, uniqueAmount
+            data,
+            uniqueAmount,
+            uniqueInst,
+            uniqueAcctNo,
+            uniqueTxnNo,
+            uniqueDescr
         }
     }
 }
 
 function getByTransactions() {
-    
+
 }
