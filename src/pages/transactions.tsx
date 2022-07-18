@@ -24,7 +24,7 @@ export default function testing(this: any, { data,
     const [amtOptions, setAmtOptions] = useState(optionsAmount);
     const [acctOptions, setAcctOptions] = useState(optionsAcctNo);
 
-    const [txnamount, setTxnAmount] = useState();
+
     const [selectedValue, setSelectedValue] = useState();
     const [searchInput, setSearchInput] = useState('');
     const [filteredResults, setFilteredResults] = useState([]);
@@ -143,7 +143,7 @@ export default function testing(this: any, { data,
                                     <td>{item.transactionNumber}</td>
                                     <td>{item.description}</td>
                                     <td>{item.accountNo}</td>
-                                    <td>{mode[item.withdrawalOrDeposit]} {item.amount}</td>
+                                    <td>{mode[item.withdrawalOrDeposit]}{item.amount}</td>
                                     {/* <td>{item.url}</td> */}
                                 </tr>
                             );
