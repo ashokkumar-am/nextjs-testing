@@ -1,9 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from 'react'
-// import format from 'date-fns';
 import moment from 'moment';
 import Select from 'react-select';
-// import AsyncSelect from 'react-select/async';
 import axios from 'axios';
 import _ from 'lodash';
 import { AutoComplete, DatePicker } from 'antd';
@@ -19,8 +17,13 @@ export default function testing(this: any, { data,
     optionsInst
 }) {
 
-    const [bankTxn, setBankTxn] = useState();
+    const [bankTxn, setBankTxn] = useState({ id: '', values: '' });
+    const [amtTxn, setAmountTxn] = useState({ id: '', values: '' });
+    const [acctTxn, setAcctTxn] = useState({ id: '', values: '' });
     const [bankOptions, setBankOptions] = useState(optionsInst);
+    const [amtOptions, setAmtOptions] = useState(optionsAmount);
+    const [acctOptions, setAcctOptions] = useState(optionsAcctNo);
+
     const [txnamount, setTxnAmount] = useState();
     const [selectedValue, setSelectedValue] = useState();
     const [searchInput, setSearchInput] = useState('');
@@ -29,20 +32,37 @@ export default function testing(this: any, { data,
 
     let selectOptions: string[] = [];
 
-
-
     const mode = {
         Deposit: "+",
         Withdrawal: "-"
     }
 
-
-    const handleChangeBank = (e) => {
-        console.log(e)
-        setBankTxn(e[0].value);
+    const handleChangeBank = async (e: any) => {
+        // console.log(e)
+        if (e && e.length > 0) {
+            await setBankTxn({ id: e[0].value, value: e[0].value });
+        }
+        await getTransactionsData();
     }
-    const handleChange = (e) => {
-        setSelectedValue(e[0].value);
+    const handleChangeAmount = async (e: any) => {
+        if (e && e.length > 0) {
+            await setAmountTxn({ id: e[0].value, value: e[0].value });
+        }
+        await getTransactionsData();
+    }
+    const handleChangeAcct = async (e: any) => {
+        if (e && e.length > 0) {
+            await setAcctTxn({ id: e[0].value, value: e[0].value });
+        }
+        await getTransactionsData();
+    }
+    const getTransactionsData = async () => {
+        let payload: any = {};
+        payload = await {
+            bankTxn: bankTxn.values,
+            amtTxn: amtTxn.values,
+            acctTxn: acctTxn.values,
+        }
     }
 
     return (
@@ -54,20 +74,16 @@ export default function testing(this: any, { data,
                 </div>
                 <Select
                     className="dropdown "
-                    placeholder="select 4 bank"
-                    value={bankTxn}
-                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
+                    placeholder="select bank"
                     options={bankOptions}
                     onChange={handleChangeBank}
-                    isMulti
                     isClearable
                 />
                 <Select
                     className="dropdown "
-                    placeholder="Search 4 acct no"
-                    value=""
+                    placeholder="Search acct no"
                     options={optionsAcctNo}
-                    onChange={handleChange}
+                    // onChange={handleChangeBank}
                     isMulti
                     isClearable
                 />
@@ -94,12 +110,11 @@ export default function testing(this: any, { data,
                 <Select
                     className="dropdown "
                     placeholder="Search for amount"
-                    value=""
-                    options={optionsAmount}
-                    onChange={handleChange}
-                    isMulti
+                    options={amtOptions}
+                    onChange={handleChangeAcct}
                     isClearable
                 />
+
             </div>
             <table className='table-auto border-separate border-spacing-2 border-spacing-y-2 mb-10'>
                 <thead>
