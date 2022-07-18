@@ -1,12 +1,13 @@
 /* eslint-disable react/jsx-key */
-import React, { Component, useState, setState } from 'react'
+import React, { useState } from 'react'
 // import format from 'date-fns';
 import moment from 'moment';
-import SelectSearch from 'react-select-search';
 import Select from 'react-select';
-import AsyncSelect from 'react-select/async';
+// import AsyncSelect from 'react-select/async';
 import axios from 'axios';
 import _ from 'lodash';
+import { AutoComplete, DatePicker } from 'antd';
+import "antd/dist/antd.css";
 
 
 export default function testing(this: any, { data,
@@ -15,9 +16,14 @@ export default function testing(this: any, { data,
     uniqueAcctNo,
     uniqueTxnNo,
     uniqueDescr }) {
-    const [txnamount, setTxnAmount] = useState()
+
+    const [bankTxn, setBankTxn] = useState();
+    const [txnamount, setTxnAmount] = useState();
     const [selectedValue, setSelectedValue] = useState();
-    // const [matterId, accountNo] = useState();
+    const [searchInput, setSearchInput] = useState('');
+    const [filteredResults, setFilteredResults] = useState([]);
+    const [currentValue, setCurrentValue] = useState('')
+
     let selectOptions: string[] = [];
 
     const options = data.map((d, index) => ({
@@ -40,7 +46,7 @@ export default function testing(this: any, { data,
     //     "value": d.description,
     //     "label" : d.description.toString()
     // }))
-    // setTxnAmount(optionsAmount)
+
     const mode = {
         Deposit: "+",
         Withdrawal: "-"
@@ -48,10 +54,16 @@ export default function testing(this: any, { data,
     // this.setState({ selectOptions: options }).bind(this)
     // let selectOptions: options;
 
-    const handleChange = (e) => {
+    const handleChangeBank = (e) => {
         console.log(e)
+        setBankTxn(e[0].value);
+
+    }
+    const handleChange = (e) => {
+        // console.log(e)
+        // console.log(input)
         setSelectedValue(e[0].value);
-        console.log(selectedValue)
+        // console.log(selectedValue)
     }
     // console.log('posts', txndatas)
     return (
@@ -64,9 +76,10 @@ export default function testing(this: any, { data,
                 <Select
                     className="dropdown "
                     placeholder="select 4 bank"
+                    value={bankTxn}
                     // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
                     options={optionsInst}
-                    onChange={handleChange}
+                    onChange={handleChangeBank}
                     isMulti
                     isClearable
                 />
@@ -79,32 +92,25 @@ export default function testing(this: any, { data,
                     isMulti
                     isClearable
                 />
+                <DatePicker onChange={(date) => console.log(date)} />,
 
-                <SelectSearch
-                    options={[]}
-                    search
-                    placeholder="Search for date"
-                    className="border-2 border-slate-500 mr-2"
-                />
-
-                <Select
-                    className="dropdown "
-                    placeholder="Search for txn no"
-                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
+                <AutoComplete
                     options={data}
-                    onChange={handleChange}
-                    isMulti
-                    isClearable
+                    style={{ width: 200 }}
+                    onSelect={(value) => {
+                        setCurrentValue(value)
+                    }}
+                    onChange={() => searchItems()}
+                    placeholder="Select Txn No "
                 />
-
-                <Select
-                    className="dropdown "
-                    placeholder="Search for description"
-                    value=""
+                <AutoComplete
                     options={data}
-                    onChange={handleChange}
-                    isMulti
-                    isClearable
+                    style={{ width: 200 }}
+                    onSelect={(value) => {
+                        setCurrentValue(value)
+                    }}
+                    onChange={() => searchItems()}
+                    placeholder="Select Description "
                 />
                 <Select
                     className="dropdown "
@@ -115,9 +121,6 @@ export default function testing(this: any, { data,
                     isMulti
                     isClearable
                 />
-
-
-
             </div>
             <table className='table-auto border-separate border-spacing-2 border-spacing-y-2 mb-10'>
                 <thead>
@@ -169,7 +172,7 @@ export async function getServerSideProps() {
     const datas = await response.data;
 
     // console.log('response', data)
-    let data = datas.reduce((a, o) => {
+    let data = await datas.reduce((a, o) => {
         a = [...a, ...o.transactions];
         return a;
     }, []);
@@ -181,19 +184,19 @@ export async function getServerSideProps() {
     }
 
     let uniqueAmount = _.uniqBy(data, obj => obj.amount);
-    console.log(uniqueAmount);
+    // console.log(uniqueAmount);
 
     let uniqueInst = _.uniqBy(data, obj => obj.nameofInstitution);
-    console.log(uniqueInst);
+    // console.log(uniqueInst);
 
     let uniqueAcctNo = _.uniqBy(data, obj => obj.accountNo);
-    console.log(uniqueAcctNo);
+    // console.log(uniqueAcctNo);
 
     let uniqueTxnNo = _.uniqBy(data, obj => obj.transactionNumber);
-    console.log(uniqueTxnNo);
+    // console.log(uniqueTxnNo);
 
     let uniqueDescr = _.uniqBy(data, obj => obj.description);
-    console.log(uniqueDescr);
+    // console.log(uniqueDescr);
 
 
     // let txndatedatas = txndatas.filter(d => (moment(d.transactionDate).format("DD-MM-YYYY") === date)).map(item) => {
