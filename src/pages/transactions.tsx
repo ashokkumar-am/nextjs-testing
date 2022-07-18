@@ -1,23 +1,31 @@
 /* eslint-disable react/jsx-key */
-import React, { useState, setState } from 'react'
+import React, { Component, useState, setState } from 'react'
 // import format from 'date-fns';
 import moment from 'moment';
 import SelectSearch from 'react-select-search';
 import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 import axios from 'axios';
 import _ from 'lodash';
 
 
-export default function testing(this: any, { txndatas, data1 }) {
-    const [selectedValue, setSelectedValue] = useState([]);
-    const [matterId, accountNo] = useState();
+export default function testing(this: any, { txndatas, data1, uniqueAmount }) {
+    const [txnamount, setTxnAmount] = useState()
+    const [selectedValue, setSelectedValue] = useState();
+    // const [matterId, accountNo] = useState();
     let selectOptions: string[] = [];
 
-    const options = txndatas.map(d => ({
+    const options = txndatas.map((d, index) => ({
         "value": d.matterId,
         "label": d.accountNo
     }))
+    const optionsAmount = uniqueAmount.map((d, index) => ({
 
+        "value": d.amount,
+        "label": d.amount.toString()
+    }))
+
+    // setTxnAmount(optionsAmount)
     const mode = {
         Deposit: "+",
         Withdrawal: "-"
@@ -27,7 +35,8 @@ export default function testing(this: any, { txndatas, data1 }) {
 
     const handleChange = (e) => {
         console.log(e)
-        setSelectedValue(Array.isArray(e) ? e.map((x) => x.value) : []);
+        setSelectedValue(e[0].value);
+        console.log(selectedValue)
     }
     // console.log('posts', txndatas)
     return (
@@ -85,10 +94,11 @@ export default function testing(this: any, { txndatas, data1 }) {
                 <Select
                     className="dropdown "
                     placeholder="Search for amount"
+                    value=""
                     // value={_.uniq(_.uniqBy(txndatas, obj => obj.amount))}
                     // value={txndatas.map((item, index) => <li key={item.id}>{item.amount}</li>)}
                     // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
-                    options={_.uniq(_.uniqBy(txndatas, obj => obj.amount))}
+                    options={optionsAmount}
                     onChange={handleChange}
                     isMulti
                     isClearable
@@ -138,12 +148,12 @@ export default function testing(this: any, { txndatas, data1 }) {
 
 
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
     // const { params, req, res } = context
 
     // console.log(params);
     // const { alltransactions } = params
-    const response = await axios.get('http://localhost:3000/api/alltransactions?transactions=${inputText}');
+    const response = await axios.get('http://localhost:3000/api/alltransactions');
     const data = await response.data;
 
     // console.log('response', data)
@@ -158,8 +168,10 @@ export async function getServerSideProps(context) {
         }
     }
 
-    let uniqueamount = _.uniqBy(txndatas, obj => obj.amount);
-    console.log(uniqueamount);
+    let uniqueAmount = _.uniqBy(txndatas, obj => obj.amount);
+    console.log(uniqueAmount);
+
+
     // let txndatedatas = txndatas.filter(d => (moment(d.transactionDate).format("DD-MM-YYYY") === date)).map(item) => {
     //     return d;
     // }, []);
@@ -168,7 +180,11 @@ export async function getServerSideProps(context) {
     // console.log(data1);
     return {
         props: {
-            txndatas
+            txndatas, uniqueAmount
         }
     }
+}
+
+function getByTransactions() {
+    
 }
