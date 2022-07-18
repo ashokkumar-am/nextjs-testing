@@ -1,13 +1,28 @@
 /* eslint-disable react/jsx-key */
-import React, { useState } from 'react'
-import format from 'date-fns';
+import React, { useState, setState } from 'react'
+// import format from 'date-fns';
+import moment from 'moment';
 import SelectSearch from 'react-select-search';
 import Select from 'react-select';
 import axios from 'axios';
 
 
-export default function testing({ txndatas }) {
+export default function testing(this: any, { txndatas, data1 }) {
     const [selectedValue, setSelectedValue] = useState([]);
+    const [matterId, accountNo] = useState();
+    let selectOptions: string[] = [];
+
+    const options = txndatas.map(d => ({
+        "value": d.matterId,
+        "label": d.accountNo
+    }))
+
+    const mode = {
+        Deposit: "+",
+        Withdrawal: "-"
+    }
+    // this.setState({ selectOptions: options }).bind(this)
+    // let selectOptions: options;
 
     const handleChange = (e) => {
         console.log(e)
@@ -25,7 +40,7 @@ export default function testing({ txndatas }) {
                     className="dropdown "
                     placeholder="select 4 bank"
                     // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
-                    options={txndatas}
+                    options={data1}
                     onChange={handleChange}
                     isMulti
                     isClearable
@@ -33,8 +48,8 @@ export default function testing({ txndatas }) {
                 <Select
                     className="dropdown "
                     placeholder="Search 4 acct no"
-                    // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
-                    // options={txndatas}
+                    value={txndatas.filter((obj, i) => { txndatas.indexOf(obj.nameofInstitution) })}
+                    options={txndatas}
                     onChange={handleChange}
                     isMulti
                     isClearable
@@ -62,7 +77,7 @@ export default function testing({ txndatas }) {
                     className="dropdown "
                     placeholder="Search for description"
                     // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
-                    options={txndatas}
+                    options={data1}
                     onChange={handleChange}
                     isMulti
                     isClearable
@@ -103,11 +118,11 @@ export default function testing({ txndatas }) {
                                     <td> <input type="checkbox" className="checked:bg-blue-500 p-2 m-2" /></td>
                                     <td>{item.nameofInstitution}</td>
                                     <td>{item.accountNo}</td>
-                                    <td>{item.transactionDate}</td>
+                                    <td>{moment(item.transactionDate).format("DD-MM-YYYY")}</td>
                                     <td>{item.transactionNumber}</td>
                                     <td>{item.description}</td>
                                     <td>{item.accountNo}</td>
-                                    <td>{item.amount}</td>
+                                    <td>{mode[item.withdrawalOrDeposit]} {item.amount}</td>
                                     {/* <td>{item.url}</td> */}
                                 </tr>
                             );
@@ -123,7 +138,9 @@ export default function testing({ txndatas }) {
 
 export async function getServerSideProps(context) {
     // const { params, req, res } = context
-    // const { transactions } = params
+
+    // console.log(params);
+    // const { alltransactions } = params
     const response = await axios.get('http://localhost:3000/api/alltransactions?transactions=${inputText}');
     const data = await response.data;
 
@@ -133,7 +150,16 @@ export async function getServerSideProps(context) {
         return a;
     }, []);
 
-    // data1 = txndatas.filter((obj, i) => { txndatas.include(obj.transactions.matterId) });
+    if (!txndatas) {
+        return {
+            notFound: true,
+        }
+    }
+    // let txndatedatas = txndatas.filter(d => (moment(d.transactionDate).format("DD-MM-YYYY") === date)).map(item) => {
+    //     return d;
+    // }, []);
+    
+    // let data1 = txndatas.filter((obj, i) => { txndatas.includes("description") });
     // console.log(data1);
     return {
         props: {
