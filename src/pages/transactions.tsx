@@ -14,10 +14,13 @@ export default function testing(this: any, { data,
     uniqueAmount,
     uniqueInst,
     uniqueAcctNo,
-    uniqueTxnNo,
-    uniqueDescr }) {
+    optionsAmount,
+    optionsAcctNo,
+    optionsInst
+}) {
 
     const [bankTxn, setBankTxn] = useState();
+    const [bankOptions, setBankOptions] = useState(optionsInst);
     const [txnamount, setTxnAmount] = useState();
     const [selectedValue, setSelectedValue] = useState();
     const [searchInput, setSearchInput] = useState('');
@@ -26,46 +29,22 @@ export default function testing(this: any, { data,
 
     let selectOptions: string[] = [];
 
-    const options = data.map((d, index) => ({
-        "value": d.matterId,
-        "label": d.accountNo
-    }))
-    const optionsAmount = uniqueAmount.map((d, index) => ({
-        "value": d.amount,
-        "label": d.amount.toString()
-    }))
-    const optionsInst = uniqueInst.map(d => ({
-        "value": d.nameofInstitution,
-        "label": d.nameofInstitution.toString()
-    }))
-    const optionsAcctNo = uniqueAcctNo.map(d => ({
-        "value": d.accountNo,
-        "label": d.accountNo.toString()
-    }))
-    // const optionsDescr = uniqueDescr.map(d => ({
-    //     "value": d.description,
-    //     "label" : d.description.toString()
-    // }))
+
 
     const mode = {
         Deposit: "+",
         Withdrawal: "-"
     }
-    // this.setState({ selectOptions: options }).bind(this)
-    // let selectOptions: options;
+
 
     const handleChangeBank = (e) => {
         console.log(e)
         setBankTxn(e[0].value);
-
     }
     const handleChange = (e) => {
-        // console.log(e)
-        // console.log(input)
         setSelectedValue(e[0].value);
-        // console.log(selectedValue)
     }
-    // console.log('posts', txndatas)
+
     return (
         <div>
             <h1> testing </h1>
@@ -78,7 +57,7 @@ export default function testing(this: any, { data,
                     placeholder="select 4 bank"
                     value={bankTxn}
                     // value={txndatas.filter((obj, i) => { txndatas.include(obj.nameofInstitution) })}
-                    options={optionsInst}
+                    options={bankOptions}
                     onChange={handleChangeBank}
                     isMulti
                     isClearable
@@ -198,6 +177,19 @@ export async function getServerSideProps() {
     let uniqueDescr = _.uniqBy(data, obj => obj.description);
     // console.log(uniqueDescr);
 
+    const optionsAmount = uniqueAmount.map((d, index) => ({
+        "value": d.amount,
+        "label": d.amount.toString()
+    }))
+    const optionsInst = uniqueInst.map(d => ({
+        "value": d.nameofInstitution,
+        "label": d.nameofInstitution.toString()
+    }))
+    console.log(optionsInst);
+    const optionsAcctNo = uniqueAcctNo.map(d => ({
+        "value": d.accountNo,
+        "label": d.accountNo.toString()
+    }))
 
     // let txndatedatas = txndatas.filter(d => (moment(d.transactionDate).format("DD-MM-YYYY") === date)).map(item) => {
     //     return d;
@@ -212,7 +204,10 @@ export async function getServerSideProps() {
             uniqueInst,
             uniqueAcctNo,
             uniqueTxnNo,
-            uniqueDescr
+            uniqueDescr,
+            optionsAmount,
+            optionsAcctNo,
+            optionsInst
         }
     }
 }
