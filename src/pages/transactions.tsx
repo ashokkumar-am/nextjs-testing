@@ -4,8 +4,8 @@ import moment from 'moment';
 import Select from 'react-select';
 import axios from 'axios';
 import _ from 'lodash';
-// import { AutoComplete, DatePicker } from 'antd';
-// import "antd/dist/antd.css";
+import { AutoComplete, DatePicker } from 'antd';
+import "antd/dist/antd.css";
 // import getServerSideProps
 
 export default function testing(this: any, {
@@ -24,6 +24,7 @@ export default function testing(this: any, {
     const [bankOptions, setBankOptions] = useState(optionsInst);
     const [amtOptions, setAmtOptions] = useState(optionsAmount);
     const [acctOptions, setAcctOptions] = useState(optionsAcctNo);
+    const [dateTxn, setDateTxn] = useState(moment().format('yyyy-MM-dd'))
 
 
     const [selectedValue, setSelectedValue] = useState();
@@ -35,6 +36,10 @@ export default function testing(this: any, {
         Deposit: "+",
         Withdrawal: "-"
     }
+    // const onDateChange = (e: any) => {
+    //     const newDate = moment(new Date(e.targe.value)).format("yyyy-MM-dd");
+    //     getTransactionsDate(newDate, 'date');
+    // }
 
     const handleChangeBank = (e: any) => {
         console.log(e)
@@ -53,7 +58,6 @@ export default function testing(this: any, {
         getTransactionsAmtData(e, 'amt');
     }
     const getTransactionsData = (search: any) => {
-        // console.log('object :>> ', data);
         if (search && search.value) {
             let dataSearch = data.filter((d: any) => {
                 return d.nameofInstitution == search.value;
@@ -66,7 +70,6 @@ export default function testing(this: any, {
     }
 
     const getTransactionsAcctData = (search: any) => {
-        // console.log('object :>> ', data);
         if (search && search.value) {
             let dataSearch = data.filter((d: any) => {
                 return d.accountNo == search.value;
@@ -89,6 +92,22 @@ export default function testing(this: any, {
             setTableData(tempDate);
         }
     }
+    const getTransactiondDate = (search: any) => {
+        if (search) {
+            let dataSearch = data.filter((d: any) => {
+                return moment(d.transactionDate).format("DD-MM-YYYY") == search;
+            })
+            setTableData(dataSearch)
+        } else {
+            const tempDate = Object.assign([], data);
+            setTableData(tempDate);
+        }
+    }
+    const handleChangeDate = (date, dateString) => {
+        console.log('dddddaaatee----->')
+        console.log(date.toISOString(), dateString);
+        getTransactiondDate(date)
+    };
 
     return (
         <div>
@@ -113,9 +132,12 @@ export default function testing(this: any, {
                     // isMulti
                     isClearable
                 />
-                {/* <DatePicker onChange={(date) => console.log(date)} />, */}
+                <DatePicker
+                    format="DD-MM-YYYY"
+                    onChange={handleChangeDate}
+                />
 
-                <Select
+                <AutoComplete
                     className="dropdown"
                     options={data}
 
@@ -125,8 +147,8 @@ export default function testing(this: any, {
                     onChange={() => searchItems()}
                     placeholder="Select Txn No "
                 />
-                <Select
-                    className="dropdown"
+                <AutoComplete
+                    className=""
                     options={data}
 
                     onSelect={(value) => {
