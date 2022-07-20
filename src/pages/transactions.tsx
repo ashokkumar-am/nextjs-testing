@@ -95,7 +95,7 @@ export default function testing(this: any, {
     const getTransactiondDate = (search: any) => {
         if (search) {
             let dataSearch = data.filter((d: any) => {
-                return moment(d.transactionDate).format("DD-MM-YYYY") == search;
+                return new Date(moment(d.transactionDate).format('YYYY-MM-DD')).getTime() === new Date(moment(search).format('YYYY-MM-DD')).getTime();
             })
             setTableData(dataSearch)
         } else {
@@ -103,12 +103,14 @@ export default function testing(this: any, {
             setTableData(tempDate);
         }
     }
-    const handleChangeDate = (date, dateString) => {
-        console.log('dddddaaatee----->')
-        console.log(date.toISOString(), dateString);
-        getTransactiondDate(date)
+    const handleChangeDate = (date: any, dateString: any) => {
+        if (date) {
+            getTransactiondDate(date.toISOString())
+        } else {
+            const tempDate = Object.assign([], data);
+            setTableData(tempDate);
+        }
     };
-
     return (
         <div>
             <h1> testing </h1>
